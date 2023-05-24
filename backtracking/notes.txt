@@ -1,0 +1,5 @@
+- ✅ fix the set/array discrepancy between isValid and the other functions
+- fix the duplicate solution bug
+- or approach problem with a dynamic mindset & see if that yields anything
+  📄 I don't think I can use dynamic programming, because an n queens problem can't be broken down into equal, smaller subproblems due to the queens' diagonals.
+  Ex., We can't say nQueens(4) can be described as nQueens(3) + x, because valid board coordinates returned by a 4x4 grid with a single queen can never be equal to a 3x3 grid - and this applies for any nQueens(x) = nQueens(x - 1) + z statement.

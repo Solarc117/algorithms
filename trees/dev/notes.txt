@@ -1,0 +1,3 @@
+- write remove algorithm pseudocode
+  📄 should remove node without changing tree order (e.g., changing the tree's root - unless the node removed is the root)
+  📄 
