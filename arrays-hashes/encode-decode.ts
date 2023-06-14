@@ -16,6 +16,7 @@ Example2
 */
 
 class Solution {
+  // O(n) time, O(n) space.
   static encode(strings: string[]): string {
     let encodedString = ''
 
@@ -28,9 +29,12 @@ class Solution {
     return this.#recursiveDecode(string)
   }
 
+  // O(n) space, O(n) time?
   static #recursiveDecode(string: string, decoded: string[] = []): string[] {
     if (string.length === 0) return decoded
 
+    // I don't think the time complexity of string.indexOf is worth counting here, as counting the number of digits of the group length scales at a rate orders of magnitude slower than counting said string.
+    // Altogether, all the substring methods called should total roughly O(n) time.
     const separatorIndex = string.indexOf('~'),
       firstGroupLength = +string.substring(0, separatorIndex),
       firstGroup = string.substring(
