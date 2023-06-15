@@ -61,33 +61,61 @@ function longestConsecutive1(numbers: number[]): number {
   for (const number of numbers) {
     const sequenceLength = sequenceLengths.get(number)
 
-    // If num is stored, it connects to that sequence.
-    if (sequenceLength !== void 0) {
-      // Add 1 to that length,
-      const newLength = sequenceLength + 1,
-        // Get the left value of the current number in iteration,
-        lengthOfCurrent = sequenceLengths.get(number - 1)
-
-      // & if that number is currenty stored, AND the stored length is less than the current length, overwrite it with the current.
-      if (lengthOfCurrent !== void 0) {
-        if (newLength > lengthOfCurrent)
-          sequenceLengths.set(number - 1, newLength)
-      }
-      // If that number is not current stored, store it.
-      else sequenceLengths.set(number - 1, newLength)
-
-      // Delete num from sequence.
-      sequenceLengths.delete(number)
-
+    if (sequenceLength === void 0) {
+      if (!sequenceLengths.has(number - 1)) sequenceLengths.set(number - 1, 1)
       continue
     }
+    const newLength = sequenceLength + 1,
+      lengthOfCurrent = sequenceLengths.get(number - 1)
 
-    const storedLength = sequenceLengths.get(number - 1)
-
-    if (storedLength === void 0) sequenceLengths.set(number - 1, 1)
+    if (lengthOfCurrent !== void 0) {
+      if (newLength > lengthOfCurrent)
+        sequenceLengths.set(number - 1, newLength)
+    } else sequenceLengths.set(number - 1, newLength)
   }
 
-  return 0
+  let longestLength = 0
+  sequenceLengths.forEach((length, leftOfSequence) => {
+    const rightMost = leftOfSequence + length,
+      connectingSequenceLength = sequenceLengths.get(rightMost)
+
+    let lengthToCompare = length
+    if (connectingSequenceLength !== void 0) {
+      const newLength = connectingSequenceLength + length
+      sequenceLengths.set(leftOfSequence, newLength)
+      lengthToCompare = newLength
+    }
+
+    if (lengthToCompare > longestLength) longestLength = lengthToCompare
+  })
+
+  return longestLength
 }
 
-console.log(longestConsecutive1([0, 3, 7, 2, 5, 8, 4, 6, 0, 1]))
+function longestConsecutive(nums: number[]): number {
+  const numbers = new Set(nums)
+  let longestLength = 0
+
+  numbers.forEach(number => {
+    numbers.delete(number)
+    let sequenceLength = 1,
+      smaller = number - 1,
+      larger = number + 1
+
+    while (numbers.has(smaller)) {
+      numbers.delete(smaller)
+      sequenceLength++
+      smaller--
+    }
+
+    while (numbers.has(larger)) {
+      numbers.delete(larger)
+      sequenceLength++
+      larger++
+    }
+
+    if (sequenceLength > longestLength) longestLength = sequenceLength
+  })
+
+  return longestLength
+}
