@@ -21,27 +21,19 @@ interface IStack<T> {
 }
 
 export class Stack<T> implements IStack<T> {
-  private items: Map<number, T>
-  private topIndex: number
-
-  constructor() {
-    this.items = new Map()
-    this.topIndex = 0
-  }
+  private items: Map<number, T> = new Map()
 
   get size(): number {
     return this.items.size
   }
 
   add(item: T): void {
-    this.items.set(this.topIndex, item)
-    this.topIndex++
+    this.items.set(this.size, item)
   }
 
   remove(): T | undefined {
-    const item = this.items.get(this.topIndex)
-    this.items.delete(this.topIndex)
-    this.topIndex--
+    const item = this.items.get(this.size - 1)
+    this.items.delete(this.size - 1)
     return item
   }
 
@@ -53,19 +45,6 @@ export class Stack<T> implements IStack<T> {
     console.log(this.items)
   }
 }
-
-const stack = new Stack<number>()
-stack.add(1)
-stack.add(2)
-stack.add(3)
-
-console.log(stack.peek()) // 3
-
-stack.remove()
-
-console.log(stack.peek()) // 2
-
-stack.print() // Map { 0 => 1, 1 => 2 }
 
 /*
 QUEUE
@@ -86,15 +65,9 @@ interface IQueue<T> {
 }
 
 export class Queue<T> implements IQueue<T> {
-  private items: Map<number, T>
-  private frontIndex: number
-  private backIndex: number
-
-  constructor() {
-    this.items = new Map()
-    this.frontIndex = 0
-    this.backIndex = 0
-  }
+  private items: Map<number, T> = new Map()
+  private frontIndex: number = 0
+  private backIndex: number = 0
 
   get size(): number {
     return this.items.size
