@@ -21,24 +21,22 @@ interface IStack<T> {
 }
 
 export class Stack<T> implements IStack<T> {
-  private items: Map<number, T> = new Map()
+  private items: T[] = []
 
   get size(): number {
-    return this.items.size
+    return this.items.length
   }
 
   add(item: T): void {
-    this.items.set(this.size, item)
+    this.items.push(item)
   }
 
   remove(): T | undefined {
-    const item = this.items.get(this.size - 1)
-    this.items.delete(this.size - 1)
-    return item
+    return this.items.pop()
   }
 
   peek(): T | undefined {
-    return this.items.get(this.size - 1)
+    return this.items.at(-1)
   }
 
   print(): void {

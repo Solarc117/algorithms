@@ -12,14 +12,45 @@ Constraints:
   1 <= n <= 8
 */
 
-function generateParentheses(n: number): string[] {
+function constructParenthesisString(tokens: string): string {
+  let parentheses = '',
+    nests = 0
+
+  for (const token of tokens) {
+    if (token === 'A') {
+      if (parentheses.at(-1) === '(') parentheses += ')'
+      parentheses += '('
+      continue
+    }
+
+    if (token === 'N') {
+      parentheses += '('
+      nests++
+      continue
+    }
+
+    parentheses += '))('
+    nests--
+  }
+
+  parentheses += ')'
+
+  while (nests > 0) {
+    parentheses += ')'
+    nests--
+  }
+
+  return parentheses
+}
+
+function generateParentheses0(n: number): string[] {
   function recursiveParentheses(
     n: number,
     tokens: string,
     nestDepth: number
   ): void {
     if (n === 0) {
-      PERMUTATIONS.push(tokens)
+      PERMUTATIONS.push(constructParenthesisString(tokens))
       return
     }
 
@@ -33,30 +64,33 @@ function generateParentheses(n: number): string[] {
   return PERMUTATIONS
 }
 
-function constructParenthesisString(order: string): string {
-  let result = "";
-  let depth = 0;
-  for (let i = 0; i < order.length; i++) {
-    if (order[i] === "A") {
-      result += "()";
-    } else if (order[i] === "N") {
-      result = `(${result})`;
-      depth++;
-    } else if (order[i] === "C") {
-      while (depth > 0) {
-        result += ")";
-        depth--;
-      }
-      result += "()";
+function generateParentheses(n: number): string[] {
+  function recursiveParentheses(
+    n: number,
+    parentheses: string,
+    nests: number
+  ): void {
+    if (n === 0) {
+      let closedParentheses = `${parentheses})`
+      for (let i = 0; i < nests; i++) closedParentheses += ')'
+      PERMUTATIONS.push(closedParentheses)
+      return
+    }
+
+    recursiveParentheses(
+      n - 1,
+      `${parentheses}${parentheses.at(-1) === '(' ? ')(' : ')'}`,
+      nests
+    )
+    recursiveParentheses(n - 1, `${parentheses}(`, nests + 1)
+    if (nests > 0) {
+      for (let i = nests; i > 0; i--)
+      recursiveParentheses(n - 1, `${parentheses})${')'.repeat(i)}(`, nests - i)
     }
   }
-  while (depth > 0) {
-    result += ")";
-    depth--;
-  }
-  return result;
+  const PERMUTATIONS: string[] = []
+  recursiveParentheses(n - 1, '(', 0)
+
+  return PERMUTATIONS
 }
 
-console.log(constructParenthesisString('AAA'))
-console.log(constructParenthesisString('AAN'))
-console.log(constructParenthesisString('ANC'))

@@ -20,41 +20,7 @@ Constraints:
   1 <= s.length <= 104
   s consists of parentheses only '()[]{}'.
 */
-class Stack<T> {
-  private items: Map<number, T>
-  private topIndex: number
-
-  constructor() {
-    this.items = new Map()
-    this.topIndex = 0
-  }
-
-  get size(): number {
-    return this.items.size
-  }
-
-  add(item: T): void {
-    this.items.set(this.topIndex, item)
-    this.topIndex++
-  }
-
-  remove(): T | undefined {
-    if (this.topIndex === 0) return
-
-    const item = this.items.get(this.topIndex - 1)
-    this.items.delete(this.topIndex - 1)
-    this.topIndex--
-    return item
-  }
-
-  peek(): T | undefined {
-    return this.items.get(this.size - 1)
-  }
-
-  print(): void {
-    console.log(this.items)
-  }
-}
+import { Stack } from './index'
 
 class Parentheses {
   static valid(parentheses: string): boolean {
@@ -66,7 +32,7 @@ class Parentheses {
       // O(n) space.
       stack = new Stack<string>()
 
-      // O(n) time.
+    // O(n) time.
     for (const parenthesis of parentheses) {
       const parenthesisPair = pairsOfClosing.get(parenthesis)
 
@@ -77,4 +43,3 @@ class Parentheses {
     return stack.size === 0
   }
 }
-
