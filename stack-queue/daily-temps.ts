@@ -71,11 +71,11 @@ function dailyTemperatures3(
   return leftAnswers
 }
 
-const maxTemperature = 100
 function dailyTemperatures(temperatures: number[]): number[] {
-  const previouslyEncounteredTemperatureIndexes: Map<number, number> =
+  const MAX_TEMPERATURE = 100,
+  temperatureIndexes: Map<number, number> =
       new Map(),
-    indexesOfNextWarmerTemperatures: number[] = []
+    answer: number[] = []
 
   for (
     let currentIndex = temperatures.length - 1;
@@ -87,26 +87,26 @@ function dailyTemperatures(temperatures: number[]): number[] {
     let minIndex = Infinity
     for (
       let higherTemperature = currentTemperature + 1;
-      higherTemperature <= maxTemperature;
+      higherTemperature <= MAX_TEMPERATURE;
       higherTemperature++
     ) {
-      const higherTemperatureIndex =
-        previouslyEncounteredTemperatureIndexes.get(higherTemperature)
+      const temperatureIndex =
+        temperatureIndexes.get(higherTemperature)
 
-      if (higherTemperatureIndex !== void 0)
+      if (temperatureIndex !== void 0)
         // Temperature has been found before - check if its index is closer than the previously stored one.
-        minIndex = Math.min(higherTemperatureIndex, minIndex)
-
-      indexesOfNextWarmerTemperatures[currentIndex] =
-        minIndex === Infinity ? 0 : minIndex
-      previouslyEncounteredTemperatureIndexes.set(
-        currentTemperature,
-        currentIndex
-      )
+        minIndex = Math.min(temperatureIndex, minIndex)
     }
+
+    answer[currentIndex] =
+      minIndex === Infinity ? 0 : minIndex - currentIndex
+    temperatureIndexes.set(
+      currentTemperature,
+      currentIndex
+    )
   }
 
-  return indexesOfNextWarmerTemperatures
+  return answer
 }
 
 console.log(dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]))
