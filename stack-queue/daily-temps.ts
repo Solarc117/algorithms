@@ -44,21 +44,69 @@ function indexedMergeSort(values: number[]): number[][] {
 
     return sorted
   }
+
   return mergeSort(values.map((v, i) => [v, i]))
 }
 
-function dailyTemperatures(temperatures: number[], defaultValue: number = 0): number[] {
-  if (temperatures.length <= 1) return [defaultValue]
+function dailyTemperatures3(
+  temperatures: number[],
+  defaultIs0: boolean = true,
+  sortedIndexes: number[] = indexedMergeSort(temperatures).map(([_, i]) => i)
+): number[] {
+  if (temperatures.length <= 1) return [defaultIs0 ? 0 : 1]
 
-  const answer = Array(temperatures.length),
-    sortedIndexes = indexedMergeSort(temperatures).map(([_, i]) => i)
+  const indexOfNextLargest = sortedIndexes.pop(),
+    // @ts-ignore
+    left = temperatures.slice(0, indexOfNextLargest),
+    right = temperatures.slice(indexOfNextLargest),
+    leftAnswers = dailyTemperatures3(left, false, sortedIndexes),
+    rightAnswers = dailyTemperatures3(right, defaultIs0, sortedIndexes)
 
-  answer[answer.length - 1] = 0
+  leftAnswers.push(
+    // @ts-ignore
+    defaultIs0 ? 0 : temperatures.length - indexOfNextLargest,
+    ...rightAnswers
+  )
 
-  for (let index = sortedIndexes.length - 1; index >= 0; index--) {
-    const indexOfNextLargest = sortedIndexes[index],
-      left = temperatures.slice(0, indexOfNextLargest),
-      right = temperatures.slice(indexOfNextLargest),
-      leftAnswers = dailyTemperatures(left, )
-  }
+  return leftAnswers
 }
+
+const maxTemperature = 100
+function dailyTemperatures(temperatures: number[]): number[] {
+  const previouslyEncounteredTemperatureIndexes: Map<number, number> =
+      new Map(),
+    indexesOfNextWarmerTemperatures: number[] = []
+
+  for (
+    let currentIndex = temperatures.length - 1;
+    currentIndex >= 0;
+    currentIndex--
+  ) {
+    const currentTemperature = temperatures[currentIndex]
+
+    let minIndex = Infinity
+    for (
+      let higherTemperature = currentTemperature + 1;
+      higherTemperature <= maxTemperature;
+      higherTemperature++
+    ) {
+      const higherTemperatureIndex =
+        previouslyEncounteredTemperatureIndexes.get(higherTemperature)
+
+      if (higherTemperatureIndex !== void 0)
+        // Temperature has been found before - check if its index is closer than the previously stored one.
+        minIndex = Math.min(higherTemperatureIndex, minIndex)
+
+      indexesOfNextWarmerTemperatures[currentIndex] =
+        minIndex === Infinity ? 0 : minIndex
+      previouslyEncounteredTemperatureIndexes.set(
+        currentTemperature,
+        currentIndex
+      )
+    }
+  }
+
+  return indexesOfNextWarmerTemperatures
+}
+
+console.log(dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]))
