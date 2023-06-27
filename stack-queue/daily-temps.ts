@@ -71,10 +71,9 @@ function dailyTemperatures3(
   return leftAnswers
 }
 
-function dailyTemperatures(temperatures: number[]): number[] {
+function dailyTemperatures0(temperatures: number[]): number[] {
   const MAX_TEMPERATURE = 100,
-  temperatureIndexes: Map<number, number> =
-      new Map(),
+    temperatureIndexes: Map<number, number> = new Map(),
     answer: number[] = []
 
   for (
@@ -90,23 +89,37 @@ function dailyTemperatures(temperatures: number[]): number[] {
       higherTemperature <= MAX_TEMPERATURE;
       higherTemperature++
     ) {
-      const temperatureIndex =
-        temperatureIndexes.get(higherTemperature)
+      const temperatureIndex = temperatureIndexes.get(higherTemperature)
 
       if (temperatureIndex !== void 0)
-        // Temperature has been found before - check if its index is closer than the previously stored one.
         minIndex = Math.min(temperatureIndex, minIndex)
     }
 
-    answer[currentIndex] =
-      minIndex === Infinity ? 0 : minIndex - currentIndex
-    temperatureIndexes.set(
-      currentTemperature,
-      currentIndex
-    )
+    answer[currentIndex] = minIndex === Infinity ? 0 : minIndex - currentIndex
+    temperatureIndexes.set(currentTemperature, currentIndex)
   }
 
   return answer
+}
+
+// Half time solution:
+function dailyTemperatures(temperatures: number[]): number[] {
+  const previousIndexesStack: number[] = [],
+    result: number[] = Array(temperatures.length).fill(0)
+
+  for (let i = 0; i < temperatures.length; i++) {
+    while (
+      previousIndexesStack.length > 0 &&
+      temperatures[previousIndexesStack.at(-1) as number] < temperatures[i]
+    ) {
+      const index = previousIndexesStack.pop() as number
+      result[index] = i - index
+    }
+
+    previousIndexesStack.push(i)
+  }
+
+  return result
 }
 
 console.log(dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]))
