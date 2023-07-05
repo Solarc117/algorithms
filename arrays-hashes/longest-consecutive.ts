@@ -102,6 +102,7 @@ function longestConsecutive(nums: number[]): number {
       smaller = number - 1,
       larger = number + 1
 
+    // O(1) time
     while (numbers.has(smaller)) {
       numbers.delete(smaller)
       sequenceLength++
@@ -114,7 +115,7 @@ function longestConsecutive(nums: number[]): number {
       larger++
     }
 
-    if (sequenceLength > longestLength) longestLength = sequenceLength
+    longestLength = Math.max(longestLength, sequenceLength)
   })
 
   return longestLength

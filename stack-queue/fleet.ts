@@ -37,6 +37,39 @@ Constraints:
   0 < speed[i] <= 106
 */
 
-function carFleets(target: number, positions: number[], speeds: number[]): number {
-  const order = positions.sort((a, b) => a - b)
-};
+type fleet = {
+  position: number
+  speed: number
+}
+
+function carFleet(
+  TARGET: number,
+  positions: number[],
+  speeds: number[]
+): number {
+  const eta = ({ position, speed }: fleet) => (TARGET - position) / speed,
+    fleets: fleet[] = []
+  let answer = 1
+
+  for (let i = 0; i < positions.length; i++)
+    fleets.push({
+      position: positions[i],
+      speed: speeds[i],
+    })
+  fleets.sort(({ position: a }, { position: b }) => a - b)
+
+  let front = eta(fleets.at(-1) as fleet)
+  for (let i = fleets.length - 2; i >= 0; i--) {
+    const back = eta(fleets[i])
+
+    if (back <= front) continue
+
+    answer++
+    front = back
+  }
+
+  return answer
+}
+
+console.log(carFleet(12, [10, 8, 0, 5, 3], [2, 4, 1, 1, 3]))
+console.log(carFleet(10, [8, 3, 7, 4, 6, 5], [4, 4, 4, 4, 4, 4]))
