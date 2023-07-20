@@ -72,6 +72,6 @@ function largestRectangleArea(heights: number[]): number {
   return largest
 }
 
-const numbers = [2, 1, 5, 6, 2, 3]
+// const numbers = [2, 1, 5, 6, 2, 3]
 
-console.log('largestRectangleArea:', largestRectangleArea0(numbers))
+// console.log('largestRectangleArea:', largestRectangleArea0(numbers))

@@ -103,7 +103,7 @@ function dailyTemperatures0(temperatures: number[]): number[] {
 }
 
 // Half time solution:
-function dailyTemperatures(temperatures: number[]): number[] {
+function dailyTemperatures1(temperatures: number[]): number[] {
   const previousIndexesStack: number[] = [],
     result: number[] = Array(temperatures.length).fill(0)
 
@@ -121,5 +121,28 @@ function dailyTemperatures(temperatures: number[]): number[] {
 
   return result
 }
+
+function dailyTemperatures(temperatures: number[]): number[] {
+  const nonIncreasingStack: number[] = [],
+    nextWarmer: number[] = Array(temperatures.length).fill(0),
+    topI = () => nonIncreasingStack.at(-1) as number,
+    top = () => temperatures[topI()]
+
+  for (let I = 0; I < temperatures.length; I++) {
+    const current = temperatures[I]
+
+    while (nonIncreasingStack.length > 0 && current > top()) {
+      const index = nonIncreasingStack.pop() as number
+
+      nextWarmer[index] = I - index
+    }
+
+    nonIncreasingStack.push(I)
+  }
+
+  return nextWarmer
+}
+
+// function dailyTemperatures(t:number[]):number[]{const s:number[]=[],A:number[]=Array(t.length).fill(0);for(let I=0;I<t.length;I++){while(s.length>0&&t[I]>t[s.at(-1)as number]){const i=s.pop()as number;A[i]=I-i}s.push(I)}return A}
 
 console.log(dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]))

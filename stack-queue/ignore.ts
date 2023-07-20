@@ -6,3 +6,4 @@ const hourlyPay = 15.5,
 const yearlyPay = hourlyPay * hoursPerShift * shiftsPerMonth * monthsInYear
 
 console.log('yearlyPay:', yearlyPay)
+-
